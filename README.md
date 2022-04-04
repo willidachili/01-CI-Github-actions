@@ -20,6 +20,8 @@ Dere blir også kjent med Cloud 9 utviklingsmiljøet dere skal bruke videre.
 * Logg på Cloud 9 med en URL gitt i klasserommet, URLen kan feks se slik ut ; 
 https://eu-west-1.console.aws.amazon.com/cloud9/ide/f1ffb95326cd4a27af3bd4783e4af974
 
+![Alt text](img/login.png  "a title")
+
 * Bruk kontonummer 244530008913
 * Brukernavnet og passordet er gitt i klasserommet
 * Hvis du velger "AWS" ikonet på venstremenyen vil du se "AWS Explorer". Naviger gjerne litt rundt I 
@@ -27,22 +29,12 @@ https://eu-west-1.console.aws.amazon.com/cloud9/ide/f1ffb95326cd4a27af3bd4783e4a
 
 ![Alt text](img/cloud9.png  "a title")
 
-
-### Oppdater Cloud 9 
-
-```shell
-sudo yum -y update
-sudo apt update
-sudo yum install java-11-openjdk-devel
-```
-Kjør denne kommandoen og velg Java 11
+Kjør denne kommandoen for å verifisere at Java 11 er installert
 
 ```shell
 java -version
 ```
-
 Du skal få 
-
 ```
 openjdk 11.0.14.1 2022-02-08 LTS
 OpenJDK Runtime Environment Corretto-11.0.14.10.1 (build 11.0.14.1+10-LTS)
@@ -57,32 +49,29 @@ sudo sed -i s/\$releasever/6/g /etc/yum.repos.d/epel-apache-maven.repo
 sudo yum install -y apache-maven
 ```
 
-### Konfigurer Git i Cloud 9 
+### Lag et Access Token for GitHub
+
+Når du skal autentisere deg mot din GitHub konto trenger du et access token.  Gå til  https://github.com/settings/tokens og lag et nytt. 
+
+![Alt text](img/generate.png  "a title")
+
+Kryss av for "repo" rettigheter 
+
+![Alt text](img/new_token.png  "a title")
+
+### Lage en klone / clone av din Fork av dette repoet i Cloud 9
+
+For å slippe å lime inn Access token hele tiden kan man cache dette i et valgfritt 
+antall sekunder.
 
 ```shell
-git config --global user.name <your github username>            
-git config --global user.email <your github email address>
+git config --global credential.helper "cache --timeout=86400"
 ```
-For å lettere kunne jobbe med GitHub, installerer vi også GitHub CLI 
+
+Lag en klone
 
 ```shell
-curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg
-echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null
-sudo apt update
-sudo apt install gh
-```
-
-
-### Lage en klone av din Fork av dette repoet i Cloud 9
-
-```
-git clone https://github.com/<dinbruker>/01-CI-Github-actions.git
-```
-
-* I Cloud 9 terminalen. Kjør 
-
-```shell
-git  clone https://github.com/<din bruker>>/<repoo-navn>>.git
+git clone https://github.com/≤github bruker>/01-CI-Github-actions.git
 ```
 
 * Forsøk å kjøre applikasjonen 
@@ -91,7 +80,11 @@ cd 01-CI-Github-actions
 mvn spring-boot:run
 ```
 
-Du kan teste applikasjonen med CURL fra Cloid 9
+Start en ny terminal i Cloud 9 ved å trykke (+) symbolet på tabbene
+![Alt text](img/newtab.png  "a title")
+
+Du kan teste applikasjonen med CURL fra Cloud 9
+
 ```
 curl -X POST \
 http://localhost:8080/account/1/transfer/2 \
@@ -115,8 +108,7 @@ Husk at dette er applikasjonen "Shakybank", en 500 Internal server error er svæ
 ```
 Når du ikke får noe output fra terminalen etter CURL kommandoen har requesten gått bra. 
 
-## Lag en GitHub Actions workflow 
-
+## Lag en GitHub Actions workflow
 Bruk  Cloud 9 til å gjøre lage to mapper og en fil som heter ````.github/workflows/main.yml````
 
 ```yaml
@@ -147,38 +139,59 @@ Commit og push koden til ditt repo.
 
 ```shell
 git add .github/workflows/main.yml 
-
+git commit -m"workflow"
+git push
 ```
 
+*OBS*
+Når du gjør en ```git push``` må du autentisere deg. Du må bruke et GitHub Access token som vist over, 
+passord fungerer ikkke. 
 
 Dette er en vekdig enkel *workflow* med en *job* som har en rekke *steps*. Koden sjekkes ut. JDK11 konfigureres,
 Maven lager en installasjonspakke. 
+
+![Alt text](img/workflow.png  "a title")
 
 ## Sjekk at workflow er aktiv 
 
 * Gå til din fork av dette repoet på Github 
 * Velg "Actions"
-* Bekreft at du vil kjøre Actions i ditt repo
 
 Gjør en endring på koden, gjerne i main branch, commit og push. Se at WorkFlowen kjører.
 
 ## Konfigurer branch protection på repoet
 
+![Alt text](img/branches.png  "a title")
+
 Vi skal nå sørge for at vi ikke får kode som ikke kompilerer, eller kode med brukkede tester in ni main branch.
 Det er også bra skikk å ikke comitte kode direkte på main. 
 
-- Gåt til gitHub.com og din fork av dette repoet.  
+- Gåt til din fork av dette repoet.  
 - Gå til Settings/Branches og Se etter seksjonen "Branch Protection Rules".
 - Velg *Add*
 - Velg *main* Som branch
 - Velg ````Require status check before passing````
+- I søkefeltet skriv inn teksten "build" som skal la deg velge GitHub Actions. 
 
-## Brekk en enhetstest 
+Nå vil vi ikke kunne Merge inn pull request inn i Main uten at status sjekken er i orden.
+
+## Brekk koden 
 
 - Lag en ny branch 
-- Endre testen så den feiler
-- Comitt og push endringen til GitHub 
-- Gå til ditt repo på GitHub.com og forsøk å lage en Pull request fra din branch til main. (OBS! GitHub velger default forken sin kilde når du lager en pull request. Du må endre nedtrekksmenyen til ditt eget repo.)
+
+```
+git checkout -b will_break_4_sure
+```
+- Lag en kompileringsfeil
+- Commit og push endringen til GitHub 
+
+```shell
+ git add src/
+ git commit -m"compilation error introduced"
+ git push --set-upstream origin will_break_4_sure
+```
+
+- Gå til ditt repo på GitHub.com og forsøk å lage en Pull request fra din branch ```will_break_4_sure``` til main. (OBS! GitHub velger default forken sin kilde når du lager en pull request. Du må endre nedtrekksmenyen til ditt eget repo.)
 - Sjekk at du ikke får lov til å merge PR.
 
 ## Peer review
