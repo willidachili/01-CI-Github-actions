@@ -164,6 +164,7 @@ Maven lager en installasjonspakke.
 Commit og push til ditt repo. 
 
 ```shell
+cd 01-CI-Github-actions
 git add .github/workflows/main.yml 
 git commit -m"workflow"
 git push
@@ -193,7 +194,7 @@ Ved å konfigurerere main som en beskyttet branch, og ved å bruke "status sjekk
 - Gå til Settings/Branches og Se etter seksjonen "Branch Protection Rules".
 - Velg *Add*
 - Velg *main* Som branch
-- Velg ````require a pull request before merging```
+- Velg ```require a pull request before merging```
 - Velg ````Require status check before passing````
 - I søkefeltet skriv inn teksten *build* som skal la deg velge "GitHub Actions". 
 
