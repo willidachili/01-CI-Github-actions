@@ -72,18 +72,19 @@ sudo yum install -y apache-maven
 ### Lag et Access Token for GitHub
 
 Når du skal autentisere deg mot din GitHub konto fra Cloud 9 trenger du et access token.  Gå til  https://github.com/settings/tokens og lag et nytt. 
-Access token må ha "repo" tillatelser, og "workflow" tillatelser.
 
 ![Alt text](img/generate.png  "a title")
 
-Kryss av for "repo" rettigheter 
+Access token må ha "repo" tillatelser, og "workflow" tillatelser.
 
 ![Alt text](img/new_token.png  "a title")
 
 ### Lage en klone av din Fork (av dette repoet) inn i ditt Cloud 9 miljø
 
-For å slippe å lime inn Access token hele tiden kan man cache dette i et valgfritt 
-antall sekunder.
+For å slippe å autentisere seg hele tiden kan man få git til å cache nøkler i et valgfritt 
+antall sekunder. 
+
+* OBS! Anta at det er mulig for kollegaer å få tilgang til ditt Cloud 9 miljø.   
 
 ```shell
 git config --global credential.helper "cache --timeout=86400"
