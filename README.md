@@ -1,19 +1,21 @@
 # LAB - CI med GitHub actions 
 
-I denne øvingen skal vi se på viktige prinsipper som 
+I denne øvingen skal vi se på viktige DevOps prinsipper som 
 
-- GitHib actions
+- GitHub actions
 - Trunk based development 
-- Feature branch
+- Feature branches
 - Branch protection 
-- Pull request
+- Pull requests
 
 Dere blir også kjent med Cloud 9 utviklingsmiljøet dere skal bruke videre. 
 
 ## Før dere starter
 
 - Dere trenger en GitHub Konto
-- Lag en fork av dette repositoriet inn i deres egen GitHub konto
+- Lag en fork av dette repositoriet inn i egen GitHub konto
+
+![Alt text](img/fork.png  "a title")
 
 ### Sjekk ut AWS Cloud 9 miljøet ditt
 
@@ -150,16 +152,16 @@ passord fungerer ikkke.
 Dette er en vekdig enkel *workflow* med en *job* som har en rekke *steps*. Koden sjekkes ut. JDK11 konfigureres,
 Maven lager en installasjonspakke. 
 
-![Alt text](img/workflow.png  "a title")
-
-## Sjekk at workflow er aktiv 
+## Sjekk at workflow er aktivert 
 
 * Gå til din fork av dette repoet på Github 
-* Velg "Actions"
+* Velg "Actions" - du skal at en jobb er kjørt.
+
+* ![Alt text](img/workflow.png  "a title")
 
 Gjør en endring på koden, gjerne i main branch, commit og push. Se at WorkFlowen kjører.
 
-## Konfigurer branch protection på repoet
+## Konfigurer beskyttet branch
 
 ![Alt text](img/branches.png  "a title")
 
@@ -171,7 +173,7 @@ Det er også bra skikk å ikke comitte kode direkte på main.
 - Velg *Add*
 - Velg *main* Som branch
 - Velg ````Require status check before passing````
-- I søkefeltet skriv inn teksten "build" som skal la deg velge GitHub Actions. 
+- I søkefeltet skriv inn teksten *build* som skal la deg velge GitHub Actions. 
 
 Nå vil vi ikke kunne Merge inn pull request inn i Main uten at status sjekken er i orden.
 
