@@ -26,10 +26,14 @@ https://eu-west-1.console.aws.amazon.com/cloud9/ide/f1ffb95326cd4a27af3bd4783e4a
 
 * Bruk kontonummer 244530008913
 * Brukernavnet og passordet er gitt i klasserommet
-* Hvis du velger "AWS" ikonet på venstremenyen vil du se "AWS Explorer". Naviger gjerne litt rundt I 
+* Hvis du velger "9" ikonet på øverst til venstre i hovedmenyen vil du se "AWS Explorer". Naviger gjerne litt rundt I 
 * AWS Miljøet ofr å bli kjent.
 
 ![Alt text](img/cloud9.png  "a title")
+
+Start en ny terminal i Cloud 9 ved å trykke (+) symbolet på tabbene
+![Alt text](img/newtab.png  "a title")
+
 
 Kjør denne kommandoen for å verifisere at Java 11 er installert
 
