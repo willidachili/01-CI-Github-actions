@@ -1,4 +1,17 @@
+
 # LAB - CI med GitHub actions 
+
+## Litt om eksempel-appen
+
+En banken har brukt flere år og hundretalls milioner på å utvikle et moderne kjernesystem for bank og et "fremoverlent" API som nesten tilfredsstiller Directive (EU) 2015/2366 of the European Parliament and of the Council on Payment Services in the Internal Market, published 25 November 2016 også kjent som PSD.
+
+Dette er en viktig satsning innen området "Open Banking" for SkalBank.
+
+Arkitekturmessig består systemet av to komponenter.
+
+Et API, implementert ved hjelp av Spring Boot. Koden for applikasjonen ligger i dette repoet.
+Et kjernesystem som utfører transaksjoner med andre banker, avregner mot Norges bank osv. Dere kan late som metodekall 
+som gjøres mot klassen ```ReallyShakyBankingCoreSystemService```, kommuniserer med dette systemet.
 
 I denne øvingen skal vi se på viktige DevOps prinsipper som 
 
@@ -49,6 +62,7 @@ OpenJDK 64-Bit Server VM Corretto-11.0.14.10.1 (build 11.0.14.1+10-LTS, mixed mo
 
 ### Installer Maven i Cloud 9 
 
+Kopier disse kommandoene inn i Cloud9 terminalen. De vil installere Maven. 
 ```shell
 sudo wget http://repos.fedorapeople.org/repos/dchen/apache-maven/epel-apache-maven.repo -O /etc/yum.repos.d/epel-apache-maven.repo
 sudo sed -i s/\$releasever/6/g /etc/yum.repos.d/epel-apache-maven.repo
@@ -57,7 +71,8 @@ sudo yum install -y apache-maven
 
 ### Lag et Access Token for GitHub
 
-Når du skal autentisere deg mot din GitHub konto trenger du et access token.  Gå til  https://github.com/settings/tokens og lag et nytt. 
+Når du skal autentisere deg mot din GitHub konto fra Cloud 9 trenger du et access token.  Gå til  https://github.com/settings/tokens og lag et nytt. 
+Access token må ha "repo" tillatelser, og "workflow" tillatelser.
 
 ![Alt text](img/generate.png  "a title")
 
@@ -65,7 +80,7 @@ Kryss av for "repo" rettigheter
 
 ![Alt text](img/new_token.png  "a title")
 
-### Lage en klone / clone av din Fork av dette repoet i Cloud 9
+### Lage en klone av din Fork (av dette repoet) inn i ditt Cloud 9 miljø
 
 For å slippe å lime inn Access token hele tiden kan man cache dette i et valgfritt 
 antall sekunder.
@@ -115,7 +130,7 @@ Husk at dette er applikasjonen "Shakybank", en 500 Internal server error er svæ
 Når du ikke får noe output fra terminalen etter CURL kommandoen har requesten gått bra. 
 
 ## Lag en GitHub Actions workflow
-Bruk  Cloud 9 til å gjøre lage to mapper og en fil som heter ````.github/workflows/main.yml````
+Bruk  Cloud 9 til å lage to mapper og en fil som heter ````.github/workflows/main.yml```` under rotmappen til repositoriet du har klonet.
 
 ```yaml
 # This workflow will build a Java project with Maven, and cache/restore any dependencies to improve the workflow execution time
@@ -141,7 +156,11 @@ jobs:
       run: mvn -B package --file pom.xml
 ```
 
-Commit og push koden til ditt repo. 
+
+Dette er en vekdig enkel *workflow* med en *job* som har en rekke *steps*. Koden sjekkes ut. JDK11 konfigureres,
+Maven lager en installasjonspakke.
+
+Commit og push til ditt repo. 
 
 ```shell
 git add .github/workflows/main.yml 
@@ -150,38 +169,38 @@ git push
 ```
 
 *OBS*
-Når du gjør en ```git push``` må du autentisere deg. Du må bruke et GitHub Access token som vist over, 
-passord fungerer ikkke. 
-
-Dette er en vekdig enkel *workflow* med en *job* som har en rekke *steps*. Koden sjekkes ut. JDK11 konfigureres,
-Maven lager en installasjonspakke. 
+Når du gjør en ```git push``` må du autentisere deg. Du må bruke et GitHub Access token når du blir bedt om passord.
 
 ## Sjekk at workflow er aktivert 
 
 * Gå til din fork av dette repoet på Github 
-* Velg "Actions" - du skal at en jobb er kjørt.
+* Velg "Actions" - du skal se at en jobb er kjørt.
 
 * ![Alt text](img/workflow.png  "a title")
 
-Gjør en endring på koden, gjerne i main branch, commit og push. Se at WorkFlowen kjører.
+Gjør en endring i koden, gjerne i main branch, commit og push. Observer mens commit hendelsen starter WorkFlowen, og jobben kjører.
 
-## Konfigurer beskyttet branch
+## Konfigurer main som beskyttet branch
 
 ![Alt text](img/branches.png  "a title")
 
-Vi skal nå sørge for at vi ikke får kode som ikke kompilerer, eller kode med brukkede tester in ni main branch.
-Det er også bra skikk å ikke comitte kode direkte på main. 
+Vi skal nå sørge for at bare kode som kompilerer og med tester som kjører, inn i main branch.
+Det er også bra praksis å ikke comitte kode direkte på main, så vi skal gjøre det umulig å gjøre dette. 
 
+Ved å konfigurerere main som en beskyttet branch, og ved å bruke "status sjekker" kan vi 
 - Gåt til din fork av dette repoet.  
 - Gå til Settings/Branches og Se etter seksjonen "Branch Protection Rules".
 - Velg *Add*
 - Velg *main* Som branch
+- Velg ````require a pull request before merging```
 - Velg ````Require status check before passing````
-- I søkefeltet skriv inn teksten *build* som skal la deg velge GitHub Actions. 
+- I søkefeltet skriv inn teksten *build* som skal la deg velge "GitHub Actions". 
 
-Nå vil vi ikke kunne Merge inn pull request inn i Main uten at status sjekken er i orden.
+* Nå kan vi ikke Merge en pull request inn i Main uten at status sjekken er i orden. Det betyr at vår Workflow har kjørt OK. 
+* Ingen i teamet kan heller "snike seg unna" denne sjekken ved å comitte kode rett på main branch.
+* En bra start!
 
-## Brekk koden 
+## Test å brekke koden 
 
 - Lag en ny branch 
 
@@ -197,20 +216,28 @@ git checkout -b will_break_4_sure
  git push --set-upstream origin will_break_4_sure
 ```
 
-- Gå til ditt repo på GitHub.com og forsøk å lage en Pull request fra din branch ```will_break_4_sure``` til main. (OBS! GitHub velger default forken sin kilde når du lager en pull request. Du må endre nedtrekksmenyen til ditt eget repo.)
-- Sjekk at du ikke får lov til å merge PR.
+- OBS! GitHub velger repository du lagde forken FRA som kilde når du lager en pull request første gang. Du må endre nedtrekksmenyen til ditt eget repo.
+- Gå til ditt repo på GitHub.com og forsøk å lage en Pull request fra din branch ```will_break_4_sure``` til main. 
+- Sjekk at du ikke får lov til å gjøre en Merge fordi koden ikke kompilerer
 
 ## Peer review
 
-- Gåt til gitHub.com og din fork av dette repoet.
+- Gå til gitHub.com og din fork av dette repoet.
 - Gå til Settings/Branches og Se etter seksjonen "Branch Protection Rules".
-- Velg *Add*
-- Velg *main* Som branch
-- Velg ````Require approvals before merge````
+- Velg *main* branch
+- Velg "Edit" for  eksisterende branch protection rule
+- Under ````Require a pull request before merging````
+- Kryss deretter av for ````Require approvals````
 
 ## Test
+
+![Alt text](img/addpeople.png  "a title")
  
-- Legg til en annen person som collaborator på ditt repo
-- Gå til Github og lag en ny Pull request
+- Legg til en annen person som "collaborator" i ditt repo
+- Gå til Github og lag en ny Pull request, som vist over 
 - Få personen til å godkjenne din pull request
-- Forsøk gjerne å fremprovosere en feil ved å få en unit test til å feile. Legg merke til at det fortsatt er mulig å merge til master.
+- Forsøk gjerne å fremprovosere en feil ved å få en unit test til å feile. 
+- Legg merke til at det fortsatt er mulig å merge til ```main```.
+
+
+Ferdig!
