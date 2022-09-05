@@ -246,5 +246,13 @@ git checkout -b will_break_4_sure
 - Forsøk gjerne å fremprovosere en feil ved å få en unit test til å feile. 
 - Legg merke til at det fortsatt er mulig å merge til ```main```.
 
+## Bonus challenge 
+
+- Lag en feature branch fra main -lag mange commits på denne hvor du for eksempel bare fikser skrivefeil. 
+- Lag en PR mot main, der du "squasher" de unødvendige committene i en interaktive rebase ```git rebase -i origin/main``` 
+
+## Bonus challenge 2
+
+- Kan du finne noen åpne "actions" for Github som for eksempel sjekker kodekvalitet eller eventuelle sårbarheter i avhengigheter ?
 
 Ferdig!
