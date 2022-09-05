@@ -30,23 +30,28 @@ Dere blir også kjent med Cloud 9 utviklingsmiljøet dere skal bruke videre.
 
 ![Alt text](img/fork.png  "a title")
 
-### Sjekk ut AWS Cloud 9 miljøet ditt
+### Sjekk ut Cloud 9 miljøet ditt i AWS og bli kjent med det
 
-* Logg på Cloud 9 med en URL gitt i klasserommet, URLen kan feks se slik ut ; 
-https://eu-west-1.console.aws.amazon.com/cloud9/ide/f1ffb95326cd4a27af3bd4783e4af974
-
-![Alt text](img/login.png  "a title")
-
-* Bruk kontonummer 244530008913
+* URL for innlogging er https://244530008913.signin.aws.amazon.com/console
 * Brukernavnet og passordet er gitt i klasserommet
-* Hvis du velger "9" ikonet på øverst til venstre i hovedmenyen vil du se "AWS Explorer". Naviger gjerne litt rundt I 
-* AWS Miljøet ofr å bli kjent.
+
+* Fra hovedmenyen, søk etter tjenesten "cloud9"
+
+![Alt text](img/11.png  "a title")
+
+* Velg "your environments" fra venstremenyen hvis du ikke ser noen miljøer med ditt navn
+* Hvis du ikke ser noe å trykke på som har ditt navn, pass på at du er i rett region (gitt i klasserommet)
+* Velg "Open IDE"
+
+Du må nå vente litt mens Cloud 9 starter
+
+* Hvis du velger "9" ikonet på øverst til venstre i hovedmenyen vil du se "AWS Explorer". Naviger gjerne litt rundt I AWS Miljøet for å bli kjent.
+* Blir kjent med IDE, naviger rundt.
 
 ![Alt text](img/cloud9.png  "a title")
 
 Start en ny terminal i Cloud 9 ved å trykke (+) symbolet på tabbene
 ![Alt text](img/newtab.png  "a title")
-
 
 Kjør denne kommandoen for å verifisere at Java 11 er installert
 
